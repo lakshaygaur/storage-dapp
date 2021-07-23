@@ -14,23 +14,14 @@
     if (typeof window.ethereum == 'undefined') {
         console.log('MetaMask is not installed!');
     }
-    var defaultAccount=''; // paste from ganache account
+    var defaultAccount='0x15e1Da75a1A8EC3a5Eb3aD627BE977777Fa216F0'; // paste from ganache account
     var contract;
-    var contractAddress=''; // paste contract address from txn
+    var contractAddress='0x7b7087213Cf558bD14D611BB51c1936dC877f6CD'; // paste contract address from txn
     var web3;
+    
+    web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
-    ethereum.request({ method: 'eth_requestAccounts' }).then(account => {
-        console.log('accounts', account)
-        // defaultAccount = account[0]
-        // defaultAccount = '0xdB9DBb9AC76875f5974dA30545A589036E97d2a2'
-
-        // web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/2b1bada3f07841699d95e47f4b41b36f"));
-        const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
-        if (typeof web3 == 'undefined') {
-            alert('Web3 is not ready')
-        }
-
-        const abi = [
+    const abi = [
             {
                 "constant": false,
                 "inputs": [
@@ -63,12 +54,8 @@
             }
         ]
 
-        // contractAddress = '0xd38b4A4E698F963c5f329D7DC8dc6CD5EE0dA63e' // rinkeby address
-        // contractAddress = '0xdB9DBb9AC76875f5974dA30545A589036E97d2a2' // ganache address
-
-        contract = new web3.eth.Contract(abi, contractAddress)
-        console.log('contract', contract.methods, contract.methods.setData)
-    })
+    contract = new web3.eth.Contract(abi, contractAddress)
+    console.log('contract', contract.methods, contract.methods.setData)
 
 
     function setData() {
@@ -76,7 +63,7 @@
         let inputValue = document.getElementById('myInput').value
         contract.methods.store(inputValue).send({ from: defaultAccount }).then(receipt => {
             console.log(receipt)
-            alert('Txn sent ')
+            alert('Txn sent : '+receipt.transactionHash)
         });
     }
 
